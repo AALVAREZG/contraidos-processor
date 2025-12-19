@@ -1,0 +1,15 @@
+venv/
+dist/
+data/
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+.virtual_documents/
+*/.virtual_documents/*
+.vscode
+.DS_Store
+*.pyc
+*.zip
+.~lock*
+*.pkl
+*.bak
+*.zip
