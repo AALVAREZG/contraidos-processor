@@ -15,6 +15,7 @@ import {
   XCircle,
 } from 'lucide-react';
 import { SummaryCard } from '../common/SummaryCard';
+import { DetailedContraidosTable } from './DetailedContraidosTable';
 import type { AnalysisResult } from '../../types';
 import { formatCurrency, formatNumber } from '../../utils/formatters';
 
@@ -161,6 +162,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ analysis }) => {
           </div>
         </div>
       )}
+
+      {/* Detailed Contraídos Table */}
+      <DetailedContraidosTable
+        contraidos={details.by_contraido}
+        orphanOperations={details.orphan_operations}
+      />
     </div>
   );
 };

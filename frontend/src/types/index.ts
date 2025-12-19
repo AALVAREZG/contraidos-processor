@@ -39,6 +39,7 @@ export interface Summary {
 export interface Details {
   by_fase: ByFase;
   by_contraido: ContraidoGroup[];
+  orphan_operations: Operation[];
   calculations: Calculations;
 }
 
@@ -76,11 +77,16 @@ export interface ContraidoGroup {
 
 export interface Operation {
   num_operacion: number;
+  ano: number;
+  aplicacion: number;
   fase: string;
   estado: string | number;
   importe: number;
+  cpgc: number;
   fecha: string;
+  tercero: string;
   descripcion: string;
+  is_valid: boolean;
 }
 
 export interface Calculations {

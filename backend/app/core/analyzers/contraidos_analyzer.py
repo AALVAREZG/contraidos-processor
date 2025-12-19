@@ -71,6 +71,7 @@ class ContraidosAnalyzer(BaseAnalyzer):
             summary = self._analyze_summary()
             by_fase = self._analyze_by_fase()
             by_contraido = self._analyze_by_contraido()
+            orphan_operations = self._get_orphan_operations()
             validation = self.validate_business_rules()
             calculations = self._calculate_totals()
             chart_data = self.get_chart_data()
@@ -82,6 +83,7 @@ class ContraidosAnalyzer(BaseAnalyzer):
                 details={
                     "by_fase": by_fase,
                     "by_contraido": by_contraido,
+                    "orphan_operations": orphan_operations,
                     "calculations": calculations,
                 },
                 validation=validation,
@@ -182,11 +184,16 @@ class ContraidosAnalyzer(BaseAnalyzer):
             group["operations"].append(
                 {
                     "num_operacion": op.num_operacion,
+                    "ano": op.año,
+                    "aplicacion": op.aplicacion,
                     "fase": op.fase,
                     "estado": op.estado,
                     "importe": op.importe,
+                    "cpgc": op.cpgc,
                     "fecha": op.fecha,
-                    "descripcion": op.descripcion[:50] + "..." if len(op.descripcion) > 50 else op.descripcion,
+                    "tercero": op.tercero,
+                    "descripcion": op.descripcion,
+                    "is_valid": op.is_valid_cargo if op.is_cargo else True,
                 }
             )
 
@@ -206,6 +213,30 @@ class ContraidosAnalyzer(BaseAnalyzer):
         result.sort(key=lambda x: abs(x["net_balance"]), reverse=True)
 
         return result
+
+    def _get_orphan_operations(self) -> List[Dict]:
+        """Get operations without contraído number"""
+        orphans = []
+
+        for op in self.operations:
+            if not op.num_contraido or op.num_contraido.strip() == "":
+                orphans.append(
+                    {
+                        "num_operacion": op.num_operacion,
+                        "ano": op.año,
+                        "aplicacion": op.aplicacion,
+                        "fase": op.fase,
+                        "estado": op.estado,
+                        "importe": op.importe,
+                        "cpgc": op.cpgc,
+                        "fecha": op.fecha,
+                        "tercero": op.tercero,
+                        "descripcion": op.descripcion,
+                        "is_valid": op.is_valid_cargo if op.is_cargo else True,
+                    }
+                )
+
+        return orphans
 
     def _calculate_totals(self) -> Dict:
         """Calculate totals according to business rules"""
